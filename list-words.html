@@ -7,18 +7,14 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="./assets/css/bootstrap.min.css" />
   <link rel="stylesheet" href="./assets/css/Vazir-Code.css" />
-  <!-- آیکون‌های Bootstrap -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
   <link rel="stylesheet" href="./assets/css/style.css" />
 </head>
 <body style="text-align: center;">
-  <!-- هدر -->
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
       <a class="navbar-brand" href="./index.html">
         <h5 class="mb-0">📚 پروژه متن باز ریتمیک</h5>
       </a>
-      <!-- دکمه همبرگری برای موبایل -->
       <button
         id="navbar-toggler"
         class="navbar-toggler"
@@ -47,54 +43,40 @@
   <div class="container mt-4">
     <h3 class="text-center mb-3">📖 کلمات و هجای آن‌ها</h3>
 
-    <!-- بخش آمار فشرده -->
     <div class="stats-card">
-      <div class="required-color stats-icon">
-        <i class="bi bi-list-task"></i>
-      </div>
+      <div class="required-color stats-icon">📝</div>
       <p class="stats-title">نیاز به محاسبه</p>
       <h4 class="stats-number count-word-need">۰</h4>
     </div>
     <div class="stats-card">
-      <div class="accepted-color stats-icon">
-        <i class="bi bi-check-circle-fill"></i>
-      </div>
+      <div class="accepted-color stats-icon">✅</div>
       <p class="stats-title">تایید شده</p>
       <h4 class="stats-number count-word-accept">۰</h4>
     </div>
     <div class="stats-card">
-      <div class="not-accepted-color stats-icon">
-        <i class="bi bi-exclamation-circle"></i>
-      </div>
+      <div class="not-accepted-color stats-icon">⚠️</div>
       <p class="stats-title">تایید نشده</p>
       <h4 class="stats-number count-word-not-accept">۰</h4>
     </div>
     <div class="stats-card">
-      <div class="auto-color stats-icon">
-        <i class="bi bi-cpu"></i>
-      </div>
+      <div class="auto-color stats-icon">🤖</div>
       <p class="stats-title">محاسبه خودکار</p>
       <h4 class="stats-number count-word-dont-need">۰</h4>
     </div>
     
-    <!-- فیلترها -->
     <div class="row mb-3">
       <div class="col-md-6">
         <div class="form-group">
-          <label for="filterInput" class="form-label">
-            <i class="bi bi-search"></i> جستجوی کلمه:
-          </label>
+          <label for="filterInput" class="form-label">🔍 جستجوی کلمه:</label>
           <input type="text" id="filterInput" placeholder="مثال: باران، دل" class="form-control" />
         </div>
       </div>
       <div class="col-md-6">
         <div class="form-group">
-          <label for="weightFilterInput" class="form-label">
-            <i class="bi bi-funnel"></i> فیلتر وزن:
-          </label>
+          <label for="weightFilterInput" class="form-label">⚙️ فیلتر وزن:</label>
           <div class="input-group">
             <select class="custom-select" id="weightUnitSelect">
-              <!-- گزینه‌ها به صورت داینامیک اضافه می‌شوند -->
+              <!-- Options added dynamically -->
             </select>
             <input type="text" id="weightFilterInput" placeholder="وزن (مثال: 101)" class="form-control" />
           </div>
@@ -102,14 +84,12 @@
       </div>
     </div>
     
-    <!-- دکمه جمع‌آوری -->
     <div class="text-center mb-3">
       <button class="btn btn-primary collect-btn" onclick="showChoseWord()">
-        <i class="bi bi-clipboard-plus"></i> جمع‌آوری کلمات انتخاب‌شده
+        📋 جمع‌آوری کلمات انتخاب‌شده
       </button>
     </div>
     
-    <!-- جداول -->
     <div class="card mb-3">
       <div class="card-header">
         <strong>کلمات مورد نیاز برای تأیید</strong>
@@ -128,7 +108,7 @@
               </tr>
             </thead>
             <tbody id="wordListBody">
-              <!-- کلمات اینجا نمایش داده می‌شوند -->
+              <!-- Words will be displayed here -->
             </tbody>
           </table>
         </div>
@@ -153,7 +133,7 @@
               </tr>
             </thead>
             <tbody id="wordListBody2">
-              <!-- کلمات اینجا نمایش داده می‌شوند -->
+              <!-- Words will be displayed here -->
             </tbody>
           </table>
         </div>
@@ -165,41 +145,84 @@
   <script src="./assets/js/check-poem.js"></script>
   <script src="./assets/js/custome.js"></script>
   <script>
+    // Check if required variables exist
+    if (typeof wordList === 'undefined') {
+      console.error('wordList is not defined. Make sure check-poem.js is loaded.');
+      wordList = {};
+    }
+    
+    if (typeof acceptWordList === 'undefined') {
+      console.warn('acceptWordList is not defined.');
+      acceptWordList = {};
+    }
+    
+    if (typeof baseWord === 'undefined') {
+      console.error('baseWord is not defined. Make sure custome.js is loaded.');
+      baseWord = {};
+    }
+    
+    if (typeof baseWordShape === 'undefined') {
+      console.error('baseWordShape is not defined. Make sure custome.js is loaded.');
+      baseWordShape = {};
+    }
+    
+    if (typeof getShapeOfWord === 'undefined') {
+      console.error('getShapeOfWord function is not defined.');
+      getShapeOfWord = function(wordObj) {
+        // Default implementation if function doesn't exist
+        return '';
+      };
+    }
+
     function printWords() {
       const inputText = document.querySelector('#filterInput');
       const weightInput = document.querySelector('#weightFilterInput');
       const filterValue = inputText.value.toLowerCase();
       const weightFilterValue = weightInput.value.toUpperCase();
       
+      // Check if wordList exists
+      if (!wordList || Object.keys(wordList).length === 0) {
+        document.querySelector('#wordListBody').innerHTML = 
+          '<tr><td colspan="5" class="text-center">داده‌ای برای نمایش وجود ندارد</td></tr>';
+        return;
+      }
+      
       const htmlList = Object.keys(wordList)
         .filter((item) => {
-          // فیلتر بر اساس کلمه
           const matchesWord = item.includes(filterValue);
-          // فیلتر بر اساس baseWordShape
           let matchesWeight = true;
-          if(weightInput.value !== '') {
+          
+          if (weightInput.value !== '' && wordList[item]) {
             const shape = getShapeOfWord(wordList[item]);
             matchesWeight = shape == weightFilterValue;
           }
           
           return matchesWord && matchesWeight;
         })
-        .map((item, key) => `<tr>
-          <td>${key + 1}</td>
-          <td>${item}</td>
-          <td>${wordList[item].join(' + ')}</td>
-          <td>
-             ${acceptWordList[item] != null
-                ? `<i class="bi bi-check-circle-fill text-success"></i>`
-                : `<i class="bi bi-exclamation-circle text-warning"></i>`
-              }
-          </td>
-          <td>
-            <input name="word" value="${item}" type="checkbox" />
-          </td>
-      </tr>`).join('');
+        .map((item, key) => {
+          // Get status
+          let statusIcon = '⚠️'; // Default: not accepted
+          if (acceptWordList && acceptWordList[item] != null) {
+            statusIcon = '✅'; // Accepted
+          }
+          
+          // Get syllables
+          let syllables = '';
+          if (wordList[item] && wordList[item].s) {
+            syllables = wordList[item].s.join(' + ');
+          }
+          
+          return `<tr>
+            <td>${key + 1}</td>
+            <td>${item}</td>
+            <td>${syllables}</td>
+            <td>${statusIcon}</td>
+            <td><input name="word" value="${item}" type="checkbox" /></td>
+          </tr>`;
+        }).join('');
       
       document.querySelector('#wordListBody').innerHTML = htmlList;
+      document.querySelector('#requiredCount').textContent = Object.keys(wordList).length;
     }
 
     function printWords2() {
@@ -208,64 +231,83 @@
       const filterValue = inputText.value.toLowerCase();
       const weightFilterValue = weightInput.value.toUpperCase();
       
+      // Check if wordListDontNeed exists
+      if (!wordListDontNeed || Object.keys(wordListDontNeed).length === 0) {
+        document.querySelector('#wordListBody2').innerHTML = 
+          '<tr><td colspan="5" class="text-center">داده‌ای برای نمایش وجود ندارد</td></tr>';
+        return;
+      }
+      
       const htmlList = Object.keys(wordListDontNeed)
         .filter((item) => {
-          // فیلتر بر اساس کلمه
           const matchesWord = item.includes(filterValue);
-          // فیلتر بر اساس baseWordShape
           let matchesWeight = true;
-          if(weightInput.value !== '') {
+          
+          if (weightInput.value !== '' && wordListDontNeed[item]) {
             const shape = getShapeOfWord(wordListDontNeed[item]);
             matchesWeight = shape == weightFilterValue;
           }
           
           return matchesWord && matchesWeight;
         })
-        .map((item, key) => `<tr>
-          <td>${key + 1}</td>
-          <td>${item}</td>
-          <td>${wordListDontNeed[item].join(' + ')}</td>
-          <td><i class="bi bi-cpu text-info"></i></td>
-          <td>
-            <input name="word" value="${item}" type="checkbox" />
-          </td>
-      </tr>`).join('');
+        .map((item, key) => {
+          // Get syllables - FIXED HERE
+          let syllables = '';
+          if (wordListDontNeed[item] && wordListDontNeed[item].s) {
+            syllables = wordListDontNeed[item].s.join(' + ');
+          }
+          
+          return `<tr>
+            <td>${key + 1}</td>
+            <td>${item}</td>
+            <td>${syllables}</td>
+            <td>🤖</td>
+            <td><input name="word" value="${item}" type="checkbox" /></td>
+          </tr>`;
+        }).join('');
       
       document.querySelector('#wordListBody2').innerHTML = htmlList;
+      document.querySelector('#autoCount').textContent = Object.keys(wordListDontNeed).length;
     }
-
-    printWords();
-    printWords2();
-    addBaseWordToSelect();
 
     function showChoseWord() {
       const inputList = document.querySelectorAll('[type="checkbox"]');
       const result = [...inputList].filter((input) => input.checked).map((item) => item.value).join('\n');
-      navigator.clipboard.writeText(result);
-      alert('Copy below text to clipboard. \n'+result);
-    }
-
-    function addBaseWordToSelect() {
-      // انتخاب عنصر سلکت
-      const selectElement = document.getElementById('weightUnitSelect');
-      const weightInput = document.querySelector('#weightFilterInput');
-      selectElement.innerHTML = '<option value="">انتخاب وزن...</option>';
-      // اضافه کردن گزینه‌ها به سلکت
-      for (const key in baseWord) {
-          const option = document.createElement('option');
-          option.value = key;
-          const shape = baseWordShape[key];
-          option.textContent = key+' = '+ shape; // متن گزینه
-          if(weightInput.value.toUpperCase() == shape)
-          {
-            option.selected = true;
-          }
-          selectElement.appendChild(option);
+      
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(result)
+          .then(() => {
+            alert('کلمات انتخاب‌شده در کلیپ‌بورد کپی شدند.\n' + result);
+          })
+          .catch(err => {
+            console.error('Failed to copy: ', err);
+            alert('کلمات انتخاب‌شده:\n' + result);
+          });
+      } else {
+        alert('کلمات انتخاب‌شده:\n' + result);
       }
     }
 
-    function choseWeight()
-    {
+    function addBaseWordToSelect() {
+      const selectElement = document.getElementById('weightUnitSelect');
+      const weightInput = document.querySelector('#weightFilterInput');
+      
+      selectElement.innerHTML = '<option value="">انتخاب وزن...</option>';
+      
+      for (const key in baseWord) {
+        const option = document.createElement('option');
+        option.value = key;
+        const shape = baseWordShape[key] || '';
+        option.textContent = key + ' = ' + shape;
+        
+        if (weightInput.value.toUpperCase() == shape) {
+          option.selected = true;
+        }
+        selectElement.appendChild(option);
+      }
+    }
+
+    function choseWeight() {
       const selectElement = document.getElementById('weightUnitSelect');
       const weightInput = document.querySelector('#weightFilterInput');
       const chose = selectElement.value;
@@ -274,7 +316,7 @@
       printWords2();
     }
 
-    // فیلتر کردن کلمات
+    // Event listeners
     document.getElementById('filterInput').addEventListener('input', function() {
       printWords();
       printWords2();
@@ -286,11 +328,19 @@
       addBaseWordToSelect();
     });
 
-    // رویداد تغییر در سلکت وزن
     document.getElementById('weightUnitSelect').addEventListener('change', choseWeight);
 
-    // بارگذاری اولیه
-    addBaseWordToSelect();
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      printWords();
+      printWords2();
+      addBaseWordToSelect();
+      
+      // Update total words count
+      const totalWords = (Object.keys(wordList || {}).length + 
+                         Object.keys(wordListDontNeed || {}).length);
+      document.getElementById('totalWords').textContent = totalWords;
+    });
   </script>
 </body>
 </html>

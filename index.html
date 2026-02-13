@@ -1,189 +1,202 @@
 <!DOCTYPE html>
-<html lang="en" dir="rtl">
+<html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>تحلیل شعر</title>
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="./assets/css/bootstrap.min.css" />
-  <link rel="stylesheet" href="./assets/css/Vazir-Code.css" />
-  <link rel="stylesheet" href="./assets/css/style.css" />
+  <title>تحلیل شعر – Tailwind</title>
+  <link rel="stylesheet" href="./assets/css/Vazir-Code.css">
+  <script src="./assets/js/tailwind-browser@4.js"></script>
+  <style>
+    .syllable-display {
+      font-family: 'Vazir Code', monospace;
+      direction: ltr;
+      text-align: left;
+      white-space: nowrap;
+    }
+    .result {
+      text-align: right;
+    }
+    .summarize {
+      font-size: 1.2em;
+      font-weight: bold;
+      font-family: 'Vazir Code', monospace;
+    }
+  </style>
 </head>
-<body style="text-align: center;">
-  <!-- هدر -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container">
-      <a class="navbar-brand logo" href="./index.html">
-        <h2 class="mb-0">📚 پروژه متن باز ریتمیک</h2>
-      </a>
-      <!-- دکمه همبرگری برای موبایل -->
-      <button
-        id="navbar-toggler"
-        class="navbar-toggler"
-        type="button"
-        onclick="toggleNavbar()"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
+<body class="bg-white text-gray-900 antialiased text-center font-sans">
 
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item active">
-            <a class="nav-link" href="./index.html">تحلیل شعر <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="./list-words.html">لیست کلمات</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="./about.html">درباره ما</a>
-          </li>
-        </ul>
-      </div>
-      <span class="text-muted">تعداد کلمات: <span id="totalWords">۰</span></span>
+  <nav class="bg-gray-100 border-b border-gray-200 px-4 py-3 flex flex-wrap items-center justify-between">
+    <a href="./index.html" class="text-xl font-bold text-gray-800 hover:text-gray-600 transition">
+      📚 پروژه متن باز ریتمیک
+    </a>
+
+    <button id="navbar-toggler" type="button" onclick="toggleNavbar()"
+            class="block lg:hidden p-2 rounded-md text-gray-600 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400">
+      ☰
+    </button>
+
+    <div id="navbarNav" class="hidden lg:flex lg:items-center lg:gap-4 w-full lg:w-auto mt-3 lg:mt-0">
+      <ul class="flex flex-col lg:flex-row lg:space-x-4 rtl:space-x-reverse space-y-2 lg:space-y-0 w-full">
+        <li>
+          <a href="./index.html" class="block px-3 py-2 rounded-md text-blue-700 bg-blue-100 font-semibold">تحلیل شعر</a>
+        </li>
+        <li>
+          <a href="./list-words.html" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-200 transition">لیست کلمات</a>
+        </li>
+        <li>
+          <a href="./about.html" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-200 transition">درباره ما</a>
+        </li>
+      </ul>
     </div>
+
+    <span class="text-gray-500 text-sm hidden sm:inline">
+      تعداد کلمات: <span id="totalWords" class="font-semibold">۰</span>
+    </span>
   </nav>
-  <div class="container mt-5">
-    <h2 class="mb-3">تحلیل شعر</h2>
-    
-    <div id="input-container" class="mb-3"></div>
-    
-    <button class="btn btn-primary mb-3" onclick="addLine()">افزودن مصرع جدید</button>
-    <div class="summarize">
-      تعداد مصرع ها: <strong class="countLine"></strong>
-      -
-      تعداد ابیات: <strong class="countCouplet"></strong>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6">تحلیل شعر</h1>
+
+    <div id="input-container" class="space-y-4 mb-6"></div>
+
+    <div class="flex justify-center gap-4 flex-wrap mb-6">
+      <button onclick="addLine()" 
+              class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg shadow-sm transition duration-150 focus:outline-none focus:ring-2 focus:ring-blue-400">
+        + افزودن مصرع جدید
+      </button>
     </div>
-    <br/>
-    <div class="import-export"><textarea
-      onchange="importPoem(event, this)"
-      onfocus="saveLast(event, this)"
-      style="width: 100%;"
-      rows="15"
-    ></textarea></div>
-    <!-- دکمه اشتراک‌گذاری -->
-    <button class="btn btn-success mb-3" onclick="sharePage()">اشتراک‌گذاری این صفحه</button>
-    <button class="btn btn-primary mb-3" onclick="exportAllWordToJson()">جمع آوری کلمات</button>
-  </div>
+
+    <div class="summarize text-gray-700 bg-gray-50 p-4 rounded-lg mb-6 flex justify-center gap-6">
+      <div>تعداد مصرع‌ها: <strong class="countLine text-blue-600">۰</strong></div>
+      <div>تعداد ابیات: <strong class="countCouplet text-green-600">۰</strong></div>
+    </div>
+
+    <div class="mb-6">
+      <textarea
+        onchange="importPoem(event, this)"
+        onfocus="saveLast(event, this)"
+        class="w-full h-64 p-4 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
+        placeholder="شعر خود را اینجا وارد کنید (هر مصرع در یک خط) ..."
+      ></textarea>
+    </div>
+
+    <div class="flex flex-wrap justify-center gap-4">
+      <button
+        onclick="sharePage()"
+        class="bg-green-600 hover:bg-green-700 text-white cursor-pointer font-medium py-2 px-6 rounded-lg shadow-sm transition"
+      >
+        🔗 اشتراک‌گذاری این صفحه
+      </button>
+      <button
+        onclick="exportAllWordToJson()"
+        class="bg-purple-600 hover:bg-purple-700 text-white cursor-pointer font-medium py-2 px-6 rounded-lg shadow-sm transition"
+      >
+        📥 جمع‌آوری کلمات
+      </button>
+    </div>
+  </main>
 
   <script src="./assets/js/word-list-dont-need.js"></script>
   <script src="./assets/js/check-poem.js"></script>
   <script src="./assets/js/custome.js"></script>
+
   <script>
     window.lastPoem = '';
-    function sharePage() {
-      const outputEl = document.querySelector('textarea');
-      const textContent = outputEl.value; // دریافت محتوای textarea
-      
-      // دریافت URL فعلی
-      const currentURL = new URL(window.location.href);
-      
-      // اضافه کردن یا به‌روزرسانی پارامتر 'text'
-      currentURL.searchParams.set('Text', textContent);
-      window.history.replaceState({}, '', currentURL);
 
-      navigator.clipboard.writeText(window.location.href);
+    function toggleNavbar() {
+      const navbar = document.getElementById('navbarNav');
+      navbar.classList.toggle('hidden');
+      navbar.classList.toggle('flex');
+      navbar.classList.toggle('flex-col');
+      const toggler = document.getElementById('navbar-toggler');
+      if (navbar.classList.contains('flex')) {
+        toggler.innerHTML = '✕';
+      } else {
+        toggler.innerHTML = '☰';
+      }
     }
+
     function addLine() {
-      const inputContainer = document.getElementById('input-container');
-      const newInput = document.createElement('div');
-      newInput.className = 'row death mb-3';
-      newInput.innerHTML = `
-        <div class="col-8">
-          <div class="row">
-            <div class="col-12">
-              <input
-                class="form-control mb-2"
-                type="text"
-                placeholder="مصرع جدید"
-                enterkeyhint="done"	
-                onkeydown="inputEnter(event, this)"
-              >
-            </div>
+      const container = document.getElementById('input-container');
+      const newDiv = document.createElement('div');
+      newDiv.className = 'death border-b border-gray-300 pb-4 mb-4 flex flex-wrap';
+      newDiv.innerHTML = `
+        <div class="w-full md:w-8/12 md:pl-4">
+          <div class="w-full mb-2">
+            <input type="text" placeholder="مصرع جدید"
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                   enterkeyhint="done" onkeydown="inputEnter(event, this)">
           </div>
-          <div class="row result-container">
-            <div class="col-9 result"></div>
-            <div class="col-3 syllable-count"></div>
+          <div class="flex flex-wrap">
+            <div class="w-9/12 result text-right text-gray-800 font-mono"></div>
+            <div class="w-3/12 syllable-count text-left text-sm text-gray-500"></div>
           </div>
-        </div> <!-- اصلاح شده -->
-        <div class="syllable-display col-4">
-          <span></span>
-          <e><e>
+        </div>
+        <div class="w-full md:w-4/12 mt-3 md:mt-0 syllable-display text-left font-mono">
+          <span class="block text-lg"></span>
+          <e class="text-sm text-gray-600"></e>
         </div>
       `;
-      inputContainer.appendChild(newInput);
-      const allDeath = document.querySelectorAll('.death');
-      [...allDeath].forEach((el) => { 
-        checkValue(el);
-      });
+      container.appendChild(newDiv);
+      document.querySelectorAll('.death').forEach(el => checkValue(el));
+    }
+
+    function sharePage() {
+      const outputEl = document.querySelector('textarea');
+      const textContent = outputEl.value;
+      const currentURL = new URL(window.location.href);
+      currentURL.searchParams.set('Text', textContent);
+      window.history.replaceState({}, '', currentURL);
+      navigator.clipboard.writeText(window.location.href);
     }
 
     function inputEnter(event, inputEl) {
       if (event.key === 'Enter' || event.key === 'Tab') {
-        const deathEl = inputEl.parentElement.parentElement.parentElement.parentElement; // استفاده از parentElement
-        const currentEl = inputEl.parentElement.parentElement.parentElement.parentElement
-        if(deathEl.nextElementSibling == null)
-        {
+        const deathEl = inputEl.closest('.death');
+        const currentEl = deathEl;
+        if(deathEl.nextElementSibling == null) {
           addLine();
-        }
-        else
-        {
+        } else {
           checkValue(deathEl);
         }
-        
         currentEl.nextElementSibling.querySelector('input').focus();
-
-        // 
       }
     }
 
-    function checkValue(deathEl)
-    {
+    function checkValue(deathEl) {
       const value = deathEl.querySelector('input').value;
-      const resultEl = deathEl.querySelector('.result'); // عنصر نتیجه
-      const syllableCountEl = deathEl.querySelector('.syllable-count'); // عنصر تعداد سیلاب‌ها
-      const extractSyllables = extractSyllablesAndLettersFromText(value); // تابعی که در jstest.js تعریف شده
+      const resultEl = deathEl.querySelector('.result');
+      const syllableCountEl = deathEl.querySelector('.syllable-count');
+      const extractSyllables = extractSyllablesAndLettersFromText(value);
       const syllables = extractSyllables['syllables'];
       const verifySyllables = extractSyllables['verifyIndex'];
-      // console.log(verifySyllables);
-      resultEl.innerText = showSyllables(extractSyllables); // نمایش نتیجه
-      syllableCountEl.innerText = `تعداد سیلاب‌ها: ${syllables.length}`; // نمایش تعداد سیلاب‌ها
-      const shape = syllables.map(syllable => syllable.length === 1 ? 'U' : '-').join(''); // نمایش سیلاب‌ها
+      resultEl.innerText = showSyllables(extractSyllables);
+      syllableCountEl.innerText = `تعداد سیلاب‌ها: ${syllables.length}`;
+      const shape = syllables.map(syllable => syllable.length === 1 ? 'U' : '-').join('');
       deathEl.querySelector('.syllable-display span').innerText = shape;
-      // console.log(findCombinations(shape));
       deathEl.querySelector('.syllable-display e').innerText = findCombinations(shape);
-      // console.log(syllables, shape);
-      exportPoem()
+      exportPoem();
     }
 
-    function showSyllables(extractSyllables)
-    {
+    function showSyllables(extractSyllables) {
       return extractSyllables['syllables'].map((element, index) => {
-        if(extractSyllables['verifyIndex'].findIndex((index2) => index2 === index) != -1)
-        {
+        if(extractSyllables['verifyIndex'].findIndex((index2) => index2 === index) != -1) {
           return element += `√`;
-        }
-        else
-        {
+        } else {
           return element;
         }
       }).join(' + ');
     }
 
-    function exportPoem()
-    {
+    function exportPoem() {
       const allDeathEl = document.querySelectorAll('.death');
-
-      const totalLines = allDeathEl.length; // تعداد کل مصرع‌ها
-      const couplets = Math.floor(totalLines / 2); // محاسبه تعداد ابیات
-
-      // اگر تعداد مصرع‌ها فرد باشد، یک بیت اضافی داریم
+      const totalLines = allDeathEl.length;
+      const couplets = Math.floor(totalLines / 2);
       const hasExtraLine = totalLines % 2 !== 0;
-
       document.querySelector('.countLine').innerText = totalLines;
       document.querySelector('.countCouplet').innerText = hasExtraLine ? couplets + 1 : couplets;
       const allDeath = [...allDeathEl].map((el, i) => { 
-        if(i%2 != 0)
-        {
+        if(i%2 != 0) {
           return el.querySelector('input').value + '\n';
         }
         return el.querySelector('input').value;
@@ -195,24 +208,18 @@
     function exportAllWordToJson() {
       let allDeath = document.querySelectorAll('.death');
       let result = {};
-      let deathResult = [...allDeath].forEach((deathEl) => { 
-          const value = deathEl.querySelector('input').value;
-          const res = extractSyllablesAndLettersFromText(value)['exWordList'];
-          result = {...result, ...res};
+      [...allDeath].forEach((deathEl) => { 
+        const value = deathEl.querySelector('input').value;
+        const res = extractSyllablesAndLettersFromText(value)['exWordList'];
+        result = {...result, ...res};
       });
-      
-
-      
-      // فرمت‌دهی خروجی
       const formattedResult = Object.keys(result).map((index) => {
-          const value = result[index];
-          return `"${index}": [${value.map((item)=> `'${item}'`).join(', ')}]`; // فرمت کلید و مقدار
-      }).join(',\n  '); // هر آیتم را در یک خط جداگانه قرار می‌دهد
-
+        const value = result[index];
+        return `"${index}": [${value.map((item)=> `'${item}'`).join(', ')}]`;
+      }).join(',\n  ');
       const finalOutput = `{ \n  ${formattedResult} \n}`;
       navigator.clipboard.writeText(finalOutput);
-  }
-
+    }
 
     function saveLast(event, inputEl) {
       window.lastPoem = inputEl.value;
@@ -220,31 +227,23 @@
 
     function importPoem(event, inputEl) {
       const deathContainer = document.querySelector('#input-container');
-      const poemText = inputEl.value; // دریافت متن شعر
-      if(poemText.length <  window.lastPoem.length) {
-        // console.log('yes');
+      const poemText = inputEl.value;
+      if(poemText.length < window.lastPoem.length) {
         deathContainer.innerHTML = ''; 
       }
-      let lines = poemText.split('\n'); // تقسیم متن به خطوط
+      let lines = poemText.split('\n');
       lines = lines.filter((line) => line.trim() !== '');
       let allDeath = document.querySelectorAll('.death');
-      if(lines.length > allDeath.length)
-      {
+      if(lines.length > allDeath.length) {
         linesNeedNumber = lines.length - allDeath.length;
         for (let index = 0; index < linesNeedNumber; index++) {
           addLine();
-          
         }
       }
       allDeath = document.querySelectorAll('.death');
       [...allDeath].forEach((el, i) => { 
-        if(lines[i] != null)
-        {
-          // for (let index = 8203; index < 8208; index++) {
-          //   lines[i] = lines[i].replaceAll(String.fromCharCode(8203), " ");
-          // }
-          lines[i] = lines[i].replaceAll(String.fromCharCode(8204), " "); // is work
-          
+        if(lines[i] != null) {
+          lines[i] = lines[i].replaceAll(String.fromCharCode(8204), " ");
           el.querySelector('input').value = lines[i];
           checkValue(el);
         }
@@ -253,17 +252,12 @@
 
     const params = new URL(document.location.href).searchParams;
     let text = params.get('Text');
-    if(text != '', text != null)
-    {
+    if(text != '', text != null) {
       const inputEl = document.querySelector('textarea');
       inputEl.value = text;
       importPoem(null, inputEl);
     }
   </script>
 
-  <!-- Bootstrap JS (optional) -->
-  <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> -->
-  <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script> -->
-  <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
 </body>
 </html>

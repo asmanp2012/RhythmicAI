@@ -1,75 +1,104 @@
 <!DOCTYPE html>
-<html lang="en" dir="rtl">
+<html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>درباره پروژه</title>
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="./assets/css/bootstrap.min.css" />
   <link rel="stylesheet" href="./assets/css/Vazir-Code.css" />
-  <link rel="stylesheet" href="./assets/css/style.css" />
+  <script src="./assets/js/tailwind-browser@4.js"></script>
+  <style>
+    .project-description {
+      text-align: right;
+      font-size: 18px;
+      line-height: 1.6;
+    }
+  </style>
 </head>
-<body style="text-align: center;">
-  <!-- هدر -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container">
-      <a class="navbar-brand" href="./index.html">
-        <h2 class="mb-0">📚 پروژه متن باز ریتمیک</h4>
-      </a>
-      <!-- دکمه همبرگری برای موبایل -->
-      <button
-        id="navbar-toggler"
-        class="navbar-toggler"
-        type="button"
-        onclick="toggleNavbar()"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link" href="./index.html">تحلیل شعر <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="./list-words.html">لیست کلمات</a>
-          </li>
-          <li class="nav-item active">
-            <a class="nav-link" href="./about.html">درباره ما</a>
-          </li>
-        </ul>
-      </div>
-      <span class="text-muted">تعداد کلمات: <span id="totalWords">۰</span></span>
+<body class="bg-white text-gray-900 antialiased font-sans">
+
+  <nav class="bg-gray-100 border-b border-gray-200 px-4 py-3 flex flex-wrap items-center justify-between">
+    <a href="./index.html" class="text-xl font-bold text-gray-800 hover:text-gray-600 transition">
+      📚 پروژه متن باز ریتمیک
+    </a>
+
+    <button id="navbar-toggler" type="button" onclick="toggleNavbar()"
+      class="block lg:hidden p-2 rounded-md text-gray-600 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400"
+    >
+      ☰
+    </button>
+
+    <div id="navbarNav" class="hidden lg:flex lg:items-center lg:gap-4 w-full lg:w-auto mt-3 lg:mt-0">
+      <ul class="flex flex-col lg:flex-row lg:space-x-4 rtl:space-x-reverse space-y-2 lg:space-y-0 w-full">
+        <li>
+          <a href="./index.html" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-200 transition">تحلیل شعر</a>
+        </li>
+        <li>
+          <a href="./list-words.html" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-200 transition">لیست کلمات</a>
+        </li>
+        <li>
+          <a href="./about.html" class="block px-3 py-2 rounded-md text-blue-700 bg-blue-100 font-semibold">درباره ما</a>
+        </li>
+      </ul>
     </div>
+
+    <span class="text-gray-500 text-sm hidden sm:inline">
+      تعداد کلمات: <span id="totalWords" class="font-semibold">۰</span>
+    </span>
   </nav>
-  <div class="container mt-5">
-    <h2 class="mb-3">درباره پروژه</h2>
+
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-8 text-center">درباره پروژه</h1>
     
-    <div class="project-description mb-3">
-      <p>
+    <div class="project-description text-gray-700 space-y-6">
+      <p class="leading-relaxed">
         این پروژه با هدف تحلیل و نمایش کلمات و هجای آن‌ها در اشعار فارسی طراحی شده است. کاربران می‌توانند با استفاده از این ابزار به راحتی کلمات مورد نظر خود را جستجو کرده و اطلاعات مربوط به هجای آن‌ها را مشاهده کنند.
       </p>
-      <p>
-        از ویژگی‌های اصلی این پروژه می‌توان به موارد زیر اشاره کرد:
-      </p>
-      <ul>
-        <li>جستجوی سریع و آسان کلمات و هجای آن‌ها</li>
-        <li>امکان فیلتر کردن کلمات بر اساس وزن و هجای آن‌ها</li>
-        <li>نمایش تعداد کل کلمات و وضعیت تایید آن‌ها</li>
-        <li>رابط کاربری ساده و کاربرپسند</li>
-      </ul>
-      <p>
-        این پروژه با استفاده از HTML، CSS و JavaScript توسعه داده شده است و از فریم‌ورک Bootstrap برای طراحی رابط کاربری استفاده می‌کند. همچنین، از فونت‌های فارسی برای نمایش بهتر متن‌ها بهره گرفته شده است.
-      </p>
-      <p>
-        امیدواریم این ابزار به شما در تحلیل اشعار و درک بهتر زبان فارسی کمک کند. برای هرگونه سوال یا پیشنهاد، لطفاً از طریق ایمیل،
-        asmanp2012@gmail.com
-        با ما تماس بگیرید.
+      
+      <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+        <h2 class="text-xl font-bold text-gray-800 mb-4">ویژگی‌های اصلی پروژه:</h2>
+        <ul class="list-disc list-inside space-y-2 pr-4">
+          <li class="text-gray-700">جستجوی سریع و آسان کلمات و هجای آن‌ها</li>
+          <li class="text-gray-700">امکان فیلتر کردن کلمات بر اساس وزن و هجای آن‌ها</li>
+          <li class="text-gray-700">نمایش تعداد کل کلمات و وضعیت تایید آن‌ها</li>
+          <li class="text-gray-700">رابط کاربری ساده و کاربرپسند</li>
+        </ul>
+      </div>
+      
+      <p class="leading-relaxed">
+        این پروژه با استفاده از HTML، CSS و JavaScript توسعه داده شده است و از فریم‌ورک Tailwind CSS برای طراحی رابط کاربری استفاده می‌کند. همچنین، از فونت‌های فارسی برای نمایش بهتر متن‌ها بهره گرفته شده است.
       </p>
       
+      <div class="bg-blue-50 p-6 rounded-lg border border-blue-200 text-center">
+        <p class="text-gray-800 text-lg">
+          امیدواریم این ابزار به شما در تحلیل اشعار و درک بهتر زبان فارسی کمک کند.
+        </p>
+        <p class="text-gray-700 mt-4">
+          برای هرگونه سوال یا پیشنهاد، لطفاً از طریق ایمیل با ما تماس بگیرید:
+        </p>
+        <a href="mailto:asmanp2012@gmail.com" class="inline-block mt-2 text-blue-600 hover:text-blue-800 font-semibold text-lg transition">
+          asmanp2012@gmail.com
+        </a>
+      </div>
     </div>
-  </div>
+  </main>
+
   <script src="./assets/js/word-list-dont-need.js"></script>
   <script src="./assets/js/check-poem.js"></script>
   <script src="./assets/js/custome.js"></script>
+  
+  <script>
+    function toggleNavbar() {
+      const navbar = document.getElementById('navbarNav');
+      navbar.classList.toggle('hidden');
+      navbar.classList.toggle('flex');
+      navbar.classList.toggle('flex-col');
+      const toggler = document.getElementById('navbar-toggler');
+      if (navbar.classList.contains('flex')) {
+        toggler.innerHTML = '✕';
+      } else {
+        toggler.innerHTML = '☰';
+      }
+    }
+  </script>
 </body>
 </html>

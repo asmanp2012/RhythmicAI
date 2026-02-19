@@ -30,11 +30,6 @@
       📚 پروژه متن باز ریتمیک
     </a>
 
-    <button id="navbar-toggler" type="button" onclick="toggleNavbar()"
-            class="block lg:hidden p-2 rounded-md text-gray-600 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400">
-      ☰
-    </button>
-
     <div id="navbarNav" class="hidden lg:flex lg:items-center lg:gap-4 w-full lg:w-auto mt-3 lg:mt-0">
       <ul class="flex flex-col lg:flex-row lg:space-x-4 rtl:space-x-reverse space-y-2 lg:space-y-0 w-full">
         <li>
@@ -48,10 +43,19 @@
         </li>
       </ul>
     </div>
-
-    <span class="text-gray-500 text-sm hidden sm:inline">
-      تعداد کلمات: <span id="totalWords" class="font-semibold">۰</span>
-    </span>
+    <div class="flex items-center">
+      <button
+        id="navbar-toggler"
+        onclick="toggleNavbar()"
+        type="button"
+        class="block lg:hidden p-2 rounded-md text-gray-600 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400"
+      >
+        ☰
+      </button>
+      <span class="text-gray-500 text-sm hidden sm:inline">
+        تعداد کلمات: <span id="totalWords" class="font-semibold">۰</span>
+      </span>
+    </div>
   </nav>
 
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

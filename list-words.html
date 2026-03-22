@@ -54,7 +54,7 @@
       </span>
     </div>
   </nav>
-  
+
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6 text-center">📖 کلمات و هجای آن‌ها</h1>
 
@@ -89,12 +89,12 @@
         </div>
       </div>
     </div>
-    
+
     <!-- Filters -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
       <div>
         <label for="filterInput" class="block text-sm font-medium text-gray-700 mb-2 text-right">🔍 جستجوی کلمه:</label>
-        <input type="text" id="filterInput" placeholder="مثال: باران، دل" 
+        <input type="text" id="filterInput" placeholder="مثال: باران، دل"
                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white" />
       </div>
       <div>
@@ -103,20 +103,20 @@
           <select id="weightUnitSelect" class="w-1/3 px-3 py-2 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
             <!-- Options added dynamically -->
           </select>
-          <input type="text" id="weightFilterInput" placeholder="وزن (مثال: 101)" 
+          <input type="text" id="weightFilterInput" placeholder="وزن (مثال: 101)"
                  class="w-2/3 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white" />
         </div>
       </div>
     </div>
-    
+
     <!-- Collect Button - هماهنگ با index -->
     <div class="text-center mb-6">
-      <button onclick="showChoseWord()" 
+      <button onclick="showChoseWord()"
               class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-8 rounded-lg shadow-sm transition duration-150 focus:outline-none focus:ring-2 focus:ring-blue-400">
         📋 جمع‌آوری کلمات انتخاب‌شده
       </button>
     </div>
-    
+
     <!-- Words to Verify -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-8 overflow-hidden">
       <div class="bg-gray-50 px-4 py-3 border-b border-gray-200 flex justify-between items-center">
@@ -142,7 +142,7 @@
         <div class="mb-4" id="paginationControls1"></div>
       </div>
     </div>
-    
+
     <!-- Auto-calculated Words -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
       <div class="bg-gray-50 px-4 py-3 border-b border-gray-200 flex justify-between items-center">
@@ -169,11 +169,28 @@
       </div>
     </div>
   </main>
-  
+
+  <div id="verifierModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4 overflow-hidden">
+      <div class="bg-gray-100 px-4 py-3 border-b flex justify-between items-center">
+        <h3 class="text-lg font-medium text-gray-800">لیست تاییدکنندگان</h3>
+        <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700 focus:outline-none">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="p-4">
+        <ul id="verifierList" class="space-y-2">
+        </ul>
+      </div>
+    </div>
+  </div>
+
   <script src="./assets/js/word-list-dont-need.js"></script>
   <script src="./assets/js/check-poem.js"></script>
   <script src="./assets/js/custome.js"></script>
-  
+
   <script>
     function toggleNavbar() {
       const navbar = document.getElementById('navbarNav');
@@ -190,9 +207,13 @@
 
     function getVerifierBadges(verifiers) {
       const verifierCount = verifiers.length;
-      
+
       if (verifierCount > 0) {
-        return `<div class="flex items-center gap-1">
+        const verifiersJson = JSON.stringify(verifiers).replace(/"/g, '&quot;');
+        return `<div
+          class="flex items-center gap-1"
+          onclick="openModal('${verifiersJson}')"
+        >
           <span class="inline-flex items-center justify-center w-6 h-6 bg-green-100 text-green-700 rounded-full text-xs font-bold">${verifierCount}</span>
           <div class="flex">
             ${verifiers.slice(0, 3).map(v => {
@@ -203,7 +224,7 @@
           </div>
         </div>`;
       }
-      
+
       return '<span class="text-gray-400 text-xs">—</span>';
     }
 
@@ -216,52 +237,52 @@
       const weightInput = document.querySelector('#weightFilterInput');
       const filterValue = inputText ? inputText.value.toLowerCase() : '';
       const weightFilterValue = weightInput ? weightInput.value.toUpperCase() : '';
-      
+
       if (!wordList || Object.keys(wordList).length === 0) {
-        document.querySelector('#wordListBody').innerHTML = 
+        document.querySelector('#wordListBody').innerHTML =
           '<tr><td colspan="5" class="px-4 py-8 text-center text-gray-500">داده‌ای برای نمایش وجود ندارد</td></tr>';
         return;
       }
-      
+
       const filteredKeys = Object.keys(wordList).filter((item) => {
         const matchesWord = item.includes(filterValue);
         let matchesWeight = true;
-        
+
         if (weightInput && weightInput.value !== '' && wordList[item]) {
           const shape = getShapeOfWord(wordList[item]);
           matchesWeight = shape == weightFilterValue;
         }
-        
+
         return matchesWord && matchesWeight;
       });
 
       const totalPages = Math.ceil(filteredKeys.length / itemsPerPage);
-      
+
       if (currentPage1 > totalPages) currentPage1 = 1;
       if (currentPage1 < 1) currentPage1 = 1;
 
       const startIndex = (currentPage1 - 1) * itemsPerPage;
       const endIndex = startIndex + itemsPerPage;
-      
+
       const paginatedKeys = filteredKeys.slice(startIndex, endIndex);
 
       const htmlList = paginatedKeys
         .map((item, index) => {
-          const displayIndex = startIndex + index + 1; 
+          const displayIndex = startIndex + index + 1;
 
           let statusIcon = '⚠️';
           if (acceptWordList && acceptWordList[item] != null) {
             statusIcon = '✅';
           }
-          
+
           let syllables = '';
           if (wordList[item] && wordList[item].s) {
             syllables = wordList[item].s.map(s => `<span class="syllable-badge">${s}</span>`).join('');
           }
-          
+
           const verifiers = wordList[item] && wordList[item].v ? wordList[item].v : [];
           const verifierHtml = getVerifierBadges(verifiers);
-          
+
           return `<tr class="hover:bg-gray-50 transition">
             <td class="px-4 py-3 text-gray-600">${displayIndex}</td>
             <td class="px-4 py-3 font-medium">${item}</td>
@@ -271,10 +292,10 @@
             <td class="px-4 py-3"><input name="word" value="${item}" type="checkbox" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500" /></td>
           </tr>`;
         }).join('');
-      
+
       document.querySelector('#wordListBody').innerHTML = htmlList;
       document.querySelector('#requiredCount').textContent = filteredKeys.length;
-      
+
       renderPaginationControls('paginationControls1', currentPage1, totalPages, () => {
         currentPage1--;
         printWords();
@@ -289,27 +310,27 @@
       const weightInput = document.querySelector('#weightFilterInput');
       const filterValue = inputText ? inputText.value.toLowerCase() : '';
       const weightFilterValue = weightInput ? weightInput.value.toUpperCase() : '';
-      
+
       if (!wordListDontNeed || Object.keys(wordListDontNeed).length === 0) {
-        document.querySelector('#wordListBody2').innerHTML = 
+        document.querySelector('#wordListBody2').innerHTML =
           '<tr><td colspan="5" class="px-4 py-8 text-center text-gray-500">داده‌ای برای نمایش وجود ندارد</td></tr>';
         return;
       }
-      
+
       const filteredKeys = Object.keys(wordListDontNeed).filter((item) => {
         const matchesWord = item.includes(filterValue);
         let matchesWeight = true;
-        
+
         if (weightInput && weightInput.value !== '' && wordListDontNeed[item]) {
           const shape = getShapeOfWord(wordListDontNeed[item]);
           matchesWeight = shape == weightFilterValue;
         }
-        
+
         return matchesWord && matchesWeight;
       });
 
       const totalPages = Math.ceil(filteredKeys.length / itemsPerPage);
-      
+
       if (currentPage2 > totalPages) currentPage2 = 1;
       if (currentPage2 < 1) currentPage2 = 1;
 
@@ -325,10 +346,10 @@
           if (wordListDontNeed[item] && wordListDontNeed[item].s) {
             syllables = wordListDontNeed[item].s.map(s => `<span class="syllable-badge">${s}</span>`).join('');
           }
-          
-          const verifiers = wordList[item] && wordList[item].v ? wordList[item].v : []; 
+
+          const verifiers = wordList[item] && wordList[item].v ? wordList[item].v : [];
           const verifierHtml = getVerifierBadges(verifiers);
-          
+
           return `<tr class="hover:bg-gray-50 transition">
             <td class="px-4 py-3 text-gray-600">${displayIndex}</td>
             <td class="px-4 py-3 font-medium">${item}</td>
@@ -338,7 +359,7 @@
             <td class="px-4 py-3"><input name="word" value="${item}" type="checkbox" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500" /></td>
           </tr>`;
         }).join('');
-      
+
       document.querySelector('#wordListBody2').innerHTML = htmlList;
       document.querySelector('#autoCount').textContent = filteredKeys.length;
 
@@ -357,14 +378,14 @@
 
       let html = `
         <div class="flex justify-center items-center mt-4 px-2 gap-2">
-          <button onclick="(${onNext})()" ${currentPage === totalPages || totalPages === 0 ? 'disabled' : ''} 
+          <button onclick="(${onNext})()" ${currentPage === totalPages || totalPages === 0 ? 'disabled' : ''}
             class="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed">
             Next
           </button>
           <span class="text-sm text-gray-700">
             Page <span class="font-bold">${currentPage}</span> of <span class="font-bold">${totalPages || 1}</span>
           </span>
-          <button onclick="(${onPrev})()" ${currentPage === 1 ? 'disabled' : ''} 
+          <button onclick="(${onPrev})()" ${currentPage === 1 ? 'disabled' : ''}
             class="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed">
             Previous
           </button>
@@ -376,7 +397,7 @@
     function showChoseWord() {
       const inputList = document.querySelectorAll('input[name="word"]:checked');
       const result = [...inputList].map((item) => item.value).join('\n');
-      
+
       if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(result)
           .then(() => {
@@ -394,15 +415,15 @@
     function addBaseWordToSelect() {
       const selectElement = document.getElementById('weightUnitSelect');
       const weightInput = document.querySelector('#weightFilterInput');
-      
+
       selectElement.innerHTML = '<option value="">انتخاب وزن...</option>';
-      
+
       for (const key in baseWord) {
         const option = document.createElement('option');
         option.value = key;
         const shape = baseWordShape[key] || '';
         option.textContent = key + ' = ' + shape;
-        
+
         if (weightInput && weightInput.value.toUpperCase() == shape) {
           option.selected = true;
         }
@@ -424,7 +445,7 @@
       const filterInput = document.getElementById('filterInput');
       const weightInput = document.getElementById('weightFilterInput');
       const weightSelect = document.getElementById('weightUnitSelect');
-      
+
       if (filterInput) {
         filterInput.addEventListener('input', function() {
           printWords();
@@ -447,11 +468,46 @@
       printWords();
       printWords2();
       addBaseWordToSelect();
-      
-      const totalWords = (Object.keys(wordList || {}).length + 
+
+      const totalWords = (Object.keys(wordList || {}).length +
                          Object.keys(wordListDontNeed || {}).length);
       const totalEl = document.getElementById('totalWords');
       if (totalEl) totalEl.textContent = totalWords;
+    });
+
+    function openModal(verifiersJson) {
+      const modal = document.getElementById('verifierModal');
+      const list = document.getElementById('verifierList');
+      
+      // پارس کردن JSON به آرایه
+      const verifiers = JSON.parse(verifiersJson);
+      
+      // ساخت لیست HTML
+      list.innerHTML = verifiers.map(v => `
+        <li class="flex items-center p-2 hover:bg-gray-50 rounded">
+          <span class="w-8 h-8 flex items-center justify-center bg-blue-100 text-blue-700 rounded-full text-sm font-bold ml-3">
+            ${v.charAt(0).toUpperCase()}
+          </span>
+          <span class="text-gray-700">${v}</span>
+        </li>
+      `).join('');
+      
+      // نمایش مودال
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('verifierModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    // بستن مودال با کلیک روی پس‌زمینه
+    document.getElementById('verifierModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeModal();
+      }
     });
   </script>
 </body>

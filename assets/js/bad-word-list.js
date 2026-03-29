@@ -1,3 +1,9 @@
+/**
+ * badWordList
+ *
+ * Special-case words that the general syllable algorithm cannot
+ * analyze correctly.
+*/
 let badWordList = {
   "ولّی": ['ول', 'لی'],
   "ولی": ['و', 'لی'],

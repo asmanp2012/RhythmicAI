@@ -1,3 +1,9 @@
+/**
+ * wordListDontNeed
+ *
+ * Words that do not require manual review for syllable validation.
+ *
+*/
 let wordListDontNeed = {
   "ی": { s: ['ی'], v: [] },
   "آ": { s: ['ءا'], v: [] },

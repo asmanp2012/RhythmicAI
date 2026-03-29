@@ -1,3 +1,26 @@
+/**
+ * Word data model used by the RhythmicAI analyzer.
+ *
+ * Each word in the dictionary is stored as an object with:
+ *
+ *  s → Array of syllable segments used by the meter analyzer.
+ *  v → Array of reviewers who verified the syllable segmentation.
+ *
+ * Example:
+ * {
+ *   "کلمه": {
+ *     s: ["ک", "ل", "مه"],
+ *     v: ["hossein-zia", "arrash-keyvani"]
+ *   }
+ * }
+ *
+ * The reviewer list exists because the author of this project is not a
+ * professional poet or prosody expert. Therefore, syllable segmentation
+ * is validated collaboratively by experts in Persian poetry and prosody.
+ *
+ * As more experts review words, the reliability of the dictionary improves.
+ */
+
 const baseWord = {
   "فع": ['فع'],
   "فعل": ['ف', 'عل'],
@@ -20,6 +43,12 @@ const baseWord = {
   "مستفعلن": ['مس', 'تف', 'ع', 'لن']
 }
 
+/**
+ * NOTE ABOUT acceptWordList (removed)
+ *
+ * Earlier versions of this project used a separate list called
+ * "acceptWordList" for words that had been approved by reviewers.
+*/
 let acceptWordList = {
   "تو": { s:['ت'], v:['hossein-zia', 'godgiven', 'arrash-keyvani'] },
   "سه": { s:['س'], v:['hossein-zia', 'godgiven', 'arrash-keyvani'] },
@@ -718,6 +747,14 @@ let acceptWordList = {
   "تارا": { s: ['تا', 'را'], v:['hossein-zia', 'godgiven', ] },
   "مارا": { s: ['ما', 'را'], v:['hossein-zia', 'godgiven', ] },
 }
+
+
+/**
+ * wordList
+ *
+ * Main dictionary used by the analyzer.
+ * 
+*/
 let wordList = {
   ...acceptWordList, 
   "چشام": { s: ['چ', 'شا', 'م'], v:[]},

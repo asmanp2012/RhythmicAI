@@ -1,5 +1,7 @@
 import { wordStorage } from './check-poem.mjs'
 
+export { wordStorage } from './check-poem.mjs';
+
 function loadWords() {
   if (wordStorage) {
     const elTotal = document.getElementById('totalWords');

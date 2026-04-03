@@ -41,8 +41,7 @@
     </div>
     <div class="flex items-center">
       <button
-        id="navbar-toggler"
-        onclick="toggleNavbar()"
+        navbar-toggler
         type="button"
         class="block lg:hidden p-2 rounded-md text-gray-600 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400"
       >
@@ -121,64 +120,7 @@
     </div>
   </footer>
 
-  <script src="../assets/js/word-list-dont-need.js"></script>
-  <script src="../assets/js/check-poem.js"></script>
-  <script src="../assets/js/custome.js"></script>
+  <script src="../pages/collaborators.mjs" type="module"></script>
   
-  <script>
-    function renderWordCards(words, containerId) {
-      const container = document.getElementById(containerId);
-      if (!container) return;
-      
-      if (words.length === 0) {
-        container.innerHTML = '<div class="col-span-full text-center text-gray-500 py-8">No words found</div>';
-        return;
-      }
-      
-      let html = '';
-      words.forEach(item => {
-        const syllablesText = item.syllables.join(' • ');
-        
-        html += `
-          <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-center hover:bg-blue-50 transition poem-card">
-            <div class="font-bold text-xl mb-2">${item.word}</div>
-            <div class="text-xs text-gray-500 font-mono bg-white bg-opacity-50 p-1 rounded">
-              ${syllablesText}
-            </div>
-          </div>
-        `;
-      });
-      
-      container.innerHTML = html;
-      const countEl = document.getElementById('word-count');
-      if (countEl) countEl.innerText = `${words.length} کلمه`;
-    }
-
-    const contributorId = document.querySelector('body').getAttribute("data-collaborate-id");
-    let words = [];
-    Object.keys(wordList).forEach(key => {
-      if (wordList[key].v && wordList[key].v.includes(contributorId)) {
-        words.push({
-          word: key,
-          syllables: wordList[key].s || []
-        });
-      }
-    });
-    console.log(words);
-    renderWordCards(words, 'words-container');
-
-    function toggleNavbar() {
-      const navbar = document.getElementById('navbarNav');
-      navbar.classList.toggle('hidden');
-      navbar.classList.toggle('flex');
-      navbar.classList.toggle('flex-col');
-      const toggler = document.getElementById('navbar-toggler');
-      if (navbar.classList.contains('flex')) {
-        toggler.innerHTML = '✕';
-      } else {
-        toggler.innerHTML = '☰';
-      }
-    }
-  </script>
 </body>
 </html>

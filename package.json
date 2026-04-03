@@ -1,0 +1,15 @@
+{
+  "name": "rhythmicai",
+  "version": "1.0.0",
+  "description": "RhythmicAI - Persian poem word analysis web app",
+  "private": true,
+  "type": "module",
+  "keywords": [
+    "poetry",
+    "persian",
+    "analysis",
+    "rhythmicai"
+  ],
+  "author": "Mohammad Khodadadi",
+  "license": "MIT"
+}

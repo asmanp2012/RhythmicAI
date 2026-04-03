@@ -51,8 +51,9 @@ function addLine() {
     <div class="w-full md:w-8/12 md:pl-4">
       <div class="w-full mb-2">
         <input type="text" placeholder="مصرع جدید"
-                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                enterkeyhint="done" onkeydown="inputEnter(event, this)">
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          enterkeyhint="done"
+        >
       </div>
       <div class="flex flex-wrap">
         <div class="w-9/12 result text-right text-gray-800 font-mono"></div>
@@ -65,6 +66,10 @@ function addLine() {
     </div>
   `;
   container.appendChild(newDiv);
+  const input = newDiv.querySelector('input');
+  input.addEventListener('keydown', (ev) => {
+    inputEnter(ev, input);
+  })
   document.querySelectorAll('.death').forEach(el => checkValue(el));
 }
 
@@ -93,15 +98,6 @@ function importPoem(event, inputEl) {
   });
 }
 
-function sharePage() {
-  const outputEl = document.querySelector('textarea');
-  const textContent = outputEl.value;
-  const currentURL = new URL(window.location.href);
-  currentURL.searchParams.set('Text', textContent);
-  window.history.replaceState({}, '', currentURL);
-  navigator.clipboard.writeText(window.location.href);
-}
-
 function inputEnter(event, inputEl) {
   if (event.key === 'Enter' || event.key === 'Tab') {
     const deathEl = inputEl.closest('.death');
@@ -111,7 +107,10 @@ function inputEnter(event, inputEl) {
     } else {
       checkValue(deathEl);
     }
+    if(event.key === 'Enter')
+    {
     currentEl.nextElementSibling.querySelector('input').focus();
+    }
   }
 }
 
@@ -126,9 +125,7 @@ function showSyllables(extractSyllables) {
   }).join(' + ');
 }
 
-
-
-function exportAllWordToJson() {
+document.querySelector('[export-all-word]').addEventListener('click', () => {
   let allDeath = document.querySelectorAll('.death');
   let result = {};
   [...allDeath].forEach((deathEl) => { 
@@ -142,8 +139,16 @@ function exportAllWordToJson() {
   }).join(',\n  ');
   const finalOutput = `{ \n  ${formattedResult} \n}`;
   navigator.clipboard.writeText(finalOutput);
-}
+});
 
+document.querySelector('[share-page]').addEventListener('click', () => {
+  const outputEl = document.querySelector('textarea');
+  const textContent = outputEl.value;
+  const currentURL = new URL(window.location.href);
+  currentURL.searchParams.set('Text', textContent);
+  window.history.replaceState({}, '', currentURL);
+  navigator.clipboard.writeText(window.location.href);
+});
 
 
 

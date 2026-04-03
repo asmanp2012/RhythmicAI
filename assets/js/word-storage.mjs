@@ -4,6 +4,7 @@ export class WordStorage {
   ready = false;
   dict = new Map();
 
+  allWordData = [];
   analyzeData = {
     allWord: 0,
     auto: 0,

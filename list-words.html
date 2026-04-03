@@ -42,8 +42,7 @@
 
     <div class="flex items-center">
       <button
-        id="navbar-toggler"
-        onclick="toggleNavbar()"
+        navbar-toggler
         type="button"
         class="block lg:hidden p-2 rounded-md text-gray-600 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400"
       >
@@ -111,8 +110,10 @@
 
     <!-- Collect Button - هماهنگ با index -->
     <div class="text-center mb-6">
-      <button onclick="showChoseWord()"
-              class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-8 rounded-lg shadow-sm transition duration-150 focus:outline-none focus:ring-2 focus:ring-blue-400">
+      <button
+        collect-selected-data
+        class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-8 rounded-lg shadow-sm transition duration-150 focus:outline-none focus:ring-2 focus:ring-blue-400"
+      >
         📋 جمع‌آوری کلمات انتخاب‌شده
       </button>
     </div>
@@ -170,11 +171,17 @@
     </div>
   </main>
 
-  <div id="verifierModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden items-center justify-center z-50">
+  <div
+    modal="verifiers"
+    class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden items-center justify-center z-50"
+  >
     <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4 overflow-hidden">
       <div class="bg-gray-100 px-4 py-3 border-b flex justify-between items-center">
         <h3 class="text-lg font-medium text-gray-800">لیست تاییدکنندگان</h3>
-        <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700 focus:outline-none">
+        <button
+          verifier-modal-close
+          class="text-gray-500 hover:text-gray-700 focus:outline-none"
+        >
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
           </svg>
@@ -187,328 +194,6 @@
     </div>
   </div>
 
-  <script src="./assets/js/word-list-dont-need.js"></script>
-  <script src="./assets/js/check-poem.js"></script>
-  <script src="./assets/js/custome.js"></script>
-
-  <script>
-    function toggleNavbar() {
-      const navbar = document.getElementById('navbarNav');
-      navbar.classList.toggle('hidden');
-      navbar.classList.toggle('flex');
-      navbar.classList.toggle('flex-col');
-      const toggler = document.getElementById('navbar-toggler');
-      if (navbar.classList.contains('flex')) {
-        toggler.innerHTML = '✕';
-      } else {
-        toggler.innerHTML = '☰';
-      }
-    }
-
-    function getVerifierBadges(verifiers) {
-      const verifierCount = verifiers.length;
-
-      if (verifierCount > 0) {
-        const verifiersJson = JSON.stringify(verifiers).replace(/"/g, '&quot;');
-        return `<div
-          class="flex items-center gap-1"
-          onclick="openModal('${verifiersJson}')"
-        >
-          <span class="inline-flex items-center justify-center w-6 h-6 bg-green-100 text-green-700 rounded-full text-xs font-bold">${verifierCount}</span>
-          <div class="flex">
-            ${verifiers.slice(0, 3).map(v => {
-              const initial = v.charAt(0).toUpperCase();
-              return `<span class="inline-flex -me-2 items-center justify-center w-6 h-6 bg-blue-100 text-blue-700 rounded-full text-xs border-2 border-white" title="${v}">${initial}</span>`;
-            }).join('')}
-            ${verifierCount > 3 ? `<span class="inline-flex items-center justify-center w-6 h-6 bg-gray-100 text-gray-600 rounded-full text-xs border-2 border-white">+${verifierCount-3}</span>` : ''}
-          </div>
-        </div>`;
-      }
-
-      return '<span class="text-gray-400 text-xs">—</span>';
-    }
-
-    let currentPage1 = 1;
-    let currentPage2 = 1;
-    const itemsPerPage = 50;
-
-    function printWords() {
-      const inputText = document.querySelector('#filterInput');
-      const weightInput = document.querySelector('#weightFilterInput');
-      const filterValue = inputText ? inputText.value.toLowerCase() : '';
-      const weightFilterValue = weightInput ? weightInput.value.toUpperCase() : '';
-
-      if (!wordList || Object.keys(wordList).length === 0) {
-        document.querySelector('#wordListBody').innerHTML =
-          '<tr><td colspan="5" class="px-4 py-8 text-center text-gray-500">داده‌ای برای نمایش وجود ندارد</td></tr>';
-        return;
-      }
-
-      const filteredKeys = Object.keys(wordList).filter((item) => {
-        const matchesWord = item.includes(filterValue);
-        let matchesWeight = true;
-
-        if (weightInput && weightInput.value !== '' && wordList[item]) {
-          const shape = getShapeOfWord(wordList[item]);
-          matchesWeight = shape == weightFilterValue;
-        }
-
-        return matchesWord && matchesWeight;
-      });
-
-      const totalPages = Math.ceil(filteredKeys.length / itemsPerPage);
-
-      if (currentPage1 > totalPages) currentPage1 = 1;
-      if (currentPage1 < 1) currentPage1 = 1;
-
-      const startIndex = (currentPage1 - 1) * itemsPerPage;
-      const endIndex = startIndex + itemsPerPage;
-
-      const paginatedKeys = filteredKeys.slice(startIndex, endIndex);
-
-      const htmlList = paginatedKeys
-        .map((item, index) => {
-          const displayIndex = startIndex + index + 1;
-
-          let statusIcon = '⚠️';
-          if (acceptWordList && acceptWordList[item] != null) {
-            statusIcon = '✅';
-          }
-
-          let syllables = '';
-          if (wordList[item] && wordList[item].s) {
-            syllables = wordList[item].s.map(s => `<span class="syllable-badge">${s}</span>`).join('');
-          }
-
-          const verifiers = wordList[item] && wordList[item].v ? wordList[item].v : [];
-          const verifierHtml = getVerifierBadges(verifiers);
-
-          return `<tr class="hover:bg-gray-50 transition">
-            <td class="px-4 py-3 text-gray-600">${displayIndex}</td>
-            <td class="px-4 py-3 font-medium">${item}</td>
-            <td class="px-4 py-3 font-mono">${syllables}</td>
-            <td class="px-4 py-3">${statusIcon}</td>
-            <td class="px-4 py-3">${verifierHtml}</td>
-            <td class="px-4 py-3"><input name="word" value="${item}" type="checkbox" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500" /></td>
-          </tr>`;
-        }).join('');
-
-      document.querySelector('#wordListBody').innerHTML = htmlList;
-      document.querySelector('#requiredCount').textContent = filteredKeys.length;
-
-      renderPaginationControls('paginationControls1', currentPage1, totalPages, () => {
-        currentPage1--;
-        printWords();
-      }, () => {
-        currentPage1++;
-        printWords();
-      });
-    }
-
-    function printWords2() {
-      const inputText = document.querySelector('#filterInput');
-      const weightInput = document.querySelector('#weightFilterInput');
-      const filterValue = inputText ? inputText.value.toLowerCase() : '';
-      const weightFilterValue = weightInput ? weightInput.value.toUpperCase() : '';
-
-      if (!wordListDontNeed || Object.keys(wordListDontNeed).length === 0) {
-        document.querySelector('#wordListBody2').innerHTML =
-          '<tr><td colspan="5" class="px-4 py-8 text-center text-gray-500">داده‌ای برای نمایش وجود ندارد</td></tr>';
-        return;
-      }
-
-      const filteredKeys = Object.keys(wordListDontNeed).filter((item) => {
-        const matchesWord = item.includes(filterValue);
-        let matchesWeight = true;
-
-        if (weightInput && weightInput.value !== '' && wordListDontNeed[item]) {
-          const shape = getShapeOfWord(wordListDontNeed[item]);
-          matchesWeight = shape == weightFilterValue;
-        }
-
-        return matchesWord && matchesWeight;
-      });
-
-      const totalPages = Math.ceil(filteredKeys.length / itemsPerPage);
-
-      if (currentPage2 > totalPages) currentPage2 = 1;
-      if (currentPage2 < 1) currentPage2 = 1;
-
-      const startIndex = (currentPage2 - 1) * itemsPerPage;
-      const endIndex = startIndex + itemsPerPage;
-      const paginatedKeys = filteredKeys.slice(startIndex, endIndex);
-
-      const htmlList = paginatedKeys
-        .map((item, index) => {
-          const displayIndex = startIndex + index + 1;
-
-          let syllables = '';
-          if (wordListDontNeed[item] && wordListDontNeed[item].s) {
-            syllables = wordListDontNeed[item].s.map(s => `<span class="syllable-badge">${s}</span>`).join('');
-          }
-
-          const verifiers = wordList[item] && wordList[item].v ? wordList[item].v : [];
-          const verifierHtml = getVerifierBadges(verifiers);
-
-          return `<tr class="hover:bg-gray-50 transition">
-            <td class="px-4 py-3 text-gray-600">${displayIndex}</td>
-            <td class="px-4 py-3 font-medium">${item}</td>
-            <td class="px-4 py-3 font-mono">${syllables}</td>
-            <td class="px-4 py-3">🤖</td>
-            <td class="px-4 py-3">${verifierHtml}</td>
-            <td class="px-4 py-3"><input name="word" value="${item}" type="checkbox" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500" /></td>
-          </tr>`;
-        }).join('');
-
-      document.querySelector('#wordListBody2').innerHTML = htmlList;
-      document.querySelector('#autoCount').textContent = filteredKeys.length;
-
-      renderPaginationControls('paginationControls2', currentPage2, totalPages, () => {
-        currentPage2--;
-        printWords2();
-      }, () => {
-        currentPage2++;
-        printWords2();
-      });
-    }
-
-    function renderPaginationControls(containerId, currentPage, totalPages, onPrev, onNext) {
-      const container = document.getElementById(containerId);
-      if (!container) return;
-
-      let html = `
-        <div class="flex justify-center items-center mt-4 px-2 gap-2">
-          <button onclick="(${onNext})()" ${currentPage === totalPages || totalPages === 0 ? 'disabled' : ''}
-            class="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed">
-            Next
-          </button>
-          <span class="text-sm text-gray-700">
-            Page <span class="font-bold">${currentPage}</span> of <span class="font-bold">${totalPages || 1}</span>
-          </span>
-          <button onclick="(${onPrev})()" ${currentPage === 1 ? 'disabled' : ''}
-            class="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed">
-            Previous
-          </button>
-        </div>
-      `;
-      container.innerHTML = html;
-    }
-
-    function showChoseWord() {
-      const inputList = document.querySelectorAll('input[name="word"]:checked');
-      const result = [...inputList].map((item) => item.value).join('\n');
-
-      if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(result)
-          .then(() => {
-            alert('✅ کلمات انتخاب‌شده در کلیپ‌بورد کپی شدند.\n\n' + result);
-          })
-          .catch(err => {
-            console.error('Failed to copy: ', err);
-            alert('📋 کلمات انتخاب‌شده:\n\n' + result);
-          });
-      } else {
-        alert('📋 کلمات انتخاب‌شده:\n\n' + result);
-      }
-    }
-
-    function addBaseWordToSelect() {
-      const selectElement = document.getElementById('weightUnitSelect');
-      const weightInput = document.querySelector('#weightFilterInput');
-
-      selectElement.innerHTML = '<option value="">انتخاب وزن...</option>';
-
-      for (const key in baseWord) {
-        const option = document.createElement('option');
-        option.value = key;
-        const shape = baseWordShape[key] || '';
-        option.textContent = key + ' = ' + shape;
-
-        if (weightInput && weightInput.value.toUpperCase() == shape) {
-          option.selected = true;
-        }
-        selectElement.appendChild(option);
-      }
-    }
-
-    function choseWeight() {
-      const selectElement = document.getElementById('weightUnitSelect');
-      const weightInput = document.querySelector('#weightFilterInput');
-      const chose = selectElement.value;
-      weightInput.value = baseWordShape[chose] || '';
-      printWords();
-      printWords2();
-    }
-
-    // Event listeners
-    document.addEventListener('DOMContentLoaded', function() {
-      const filterInput = document.getElementById('filterInput');
-      const weightInput = document.getElementById('weightFilterInput');
-      const weightSelect = document.getElementById('weightUnitSelect');
-
-      if (filterInput) {
-        filterInput.addEventListener('input', function() {
-          printWords();
-          printWords2();
-        });
-      }
-
-      if (weightInput) {
-        weightInput.addEventListener('input', function() {
-          printWords();
-          printWords2();
-          addBaseWordToSelect();
-        });
-      }
-
-      if (weightSelect) {
-        weightSelect.addEventListener('change', choseWeight);
-      }
-
-      printWords();
-      printWords2();
-      addBaseWordToSelect();
-
-      const totalWords = (Object.keys(wordList || {}).length +
-                         Object.keys(wordListDontNeed || {}).length);
-      const totalEl = document.getElementById('totalWords');
-      if (totalEl) totalEl.textContent = totalWords;
-    });
-
-    function openModal(verifiersJson) {
-      const modal = document.getElementById('verifierModal');
-      const list = document.getElementById('verifierList');
-      
-      // پارس کردن JSON به آرایه
-      const verifiers = JSON.parse(verifiersJson);
-      
-      // ساخت لیست HTML
-      list.innerHTML = verifiers.map(v => `
-        <li class="flex items-center p-2 hover:bg-gray-50 rounded">
-          <span class="w-8 h-8 flex items-center justify-center bg-blue-100 text-blue-700 rounded-full text-sm font-bold ml-3">
-            ${v.charAt(0).toUpperCase()}
-          </span>
-          <span class="text-gray-700">${v}</span>
-        </li>
-      `).join('');
-      
-      // نمایش مودال
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-    }
-
-    function closeModal() {
-      const modal = document.getElementById('verifierModal');
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-    }
-
-    // بستن مودال با کلیک روی پس‌زمینه
-    document.getElementById('verifierModal').addEventListener('click', function(e) {
-      if (e.target === this) {
-        closeModal();
-      }
-    });
-  </script>
+  <script src="./pages/list-words.mjs" type="module"></script>
 </body>
 </html>

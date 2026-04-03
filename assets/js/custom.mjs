@@ -39,7 +39,6 @@ function toggleNavbar() {
 }
 
 document.querySelectorAll('[navbar-toggler]').forEach((el) => { 
-  console.log('sss');
   el.addEventListener('click', () => { toggleNavbar() });
 });
 

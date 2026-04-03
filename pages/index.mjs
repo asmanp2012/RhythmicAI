@@ -1,3 +1,4 @@
+import {} from '../assets/js/custom.mjs';
 import { processText, findCombinations  } from '../assets/js/check-poem.mjs';
 
 window.lastPoem = '';

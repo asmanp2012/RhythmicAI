@@ -2,7 +2,7 @@ import { WordStorage } from './word-storage.mjs'
 
 export const wordStorage = new WordStorage();
 
-const baseWord = {
+export const baseWord = {
   "فع": ['فع'],
   "فعل": ['ف', 'عل'],
   "فع‌لن": ['فع', 'لن'],
@@ -445,10 +445,10 @@ const DB_SYLLABLES = {
   'هی': '-',
 };
 
-const getSyllableShape = (syllables) => 
+export const getSyllableShape = (syllables) => 
   syllables.map(s => s.length === 1 ? 'U' : '-').join('');
 
-const BASE_WORD_SHAPES = {}
+export const BASE_WORD_SHAPES = {}
 Object.keys(baseWord).forEach((key) => {
   const shape = getSyllableShape(baseWord[key]);
   BASE_WORD_SHAPES[key] = shape;

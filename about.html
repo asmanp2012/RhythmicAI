@@ -82,23 +82,7 @@
     </div>
   </main>
 
-  <script src="./assets/js/word-list-dont-need.js"></script>
-  <script src="./assets/js/check-poem.js"></script>
-  <script src="./assets/js/custome.js"></script>
-  
-  <script>
-    function toggleNavbar() {
-      const navbar = document.getElementById('navbarNav');
-      navbar.classList.toggle('hidden');
-      navbar.classList.toggle('flex');
-      navbar.classList.toggle('flex-col');
-      const toggler = document.getElementById('navbar-toggler');
-      if (navbar.classList.contains('flex')) {
-        toggler.innerHTML = '✕';
-      } else {
-        toggler.innerHTML = '☰';
-      }
-    }
-  </script>
+  <script src="./assets/js/custom.mjs" type="module"></script>
+
 </body>
 </html>

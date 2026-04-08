@@ -220,10 +220,18 @@ function openModal(verifiersJson) {
   // ساخت لیست HTML
   list.innerHTML = verifiers.map(v => `
     <li class="flex items-center p-2 hover:bg-gray-50 rounded">
-      <span class="w-8 h-8 flex items-center justify-center bg-blue-100 text-blue-700 rounded-full text-sm font-bold ml-3">
+      <a
+        href="./collaborators/${v.toLowerCase().replace(/\s+/g, '-')}.html"
+        class="w-8 h-8 flex items-center justify-center bg-blue-100 text-blue-700 rounded-full text-sm font-bold ml-3"
+      >
         ${v.charAt(0).toUpperCase()}
-      </span>
-      <span class="text-gray-700">${v}</span>
+      </a>
+      <a
+        href="./collaborators/${v.toLowerCase().replace(/\s+/g, '-')}.html"
+        class="text-gray-700"
+      >
+        ${v}
+      </a>
     </li>
   `).join('');
   

@@ -1,16 +1,27 @@
-// مدیریت داده‌ها در LocalStorage
-const STORAGE_KEY = 'rhythmic_ai_user_words';
+import { wordStorage, getSyllableShape } from '../assets/js/check-poem.mjs';
 
+const STORAGE_KEY = 'rhythmic_ai_user_words';
+const USER_KEY = 'rhythmic_ai_user';
+
+const main = document.getElementById('mainContent');
+const userInput = document.getElementById('username');
+const wordInput = document.getElementById('wordInput');
+
+/*
+* local storage functions
+*/
 function getStoredWords() {
     return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
 }
 
+/*
+* save words to local storage and re-render table
+*/
 function saveWords(words) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(words));
     renderTable();
 }
 
-// رندر کردن جدول
 function renderTable() {
     const words = getStoredWords();
     const tableBody = document.getElementById('localWordList');
@@ -35,32 +46,61 @@ function renderTable() {
     `).join('');
 }
 
-// ثبت کلمه جدید
+/*
+* auto-fill syllables and parts when a known word is typed, and highlight the form if it's a match
+*/
+wordInput.addEventListener('keyup', () => {
+    const filterValue = wordInput.value.trim();
+    const filteredKeys = wordStorage.allWordData.filter((item) => {
+        return item.word === filterValue;
+    });
+    if (filteredKeys.length === 1) {
+        // const shape = getSyllableShape(filteredKeys[0].s);
+        document.getElementById('syllablesInput').value = filteredKeys[0].s.join(' ');
+        document.getElementById('partsInput').value = filteredKeys[0].parts?.join(' ') || '';
+        document.getElementById('extendedInput').checked = filteredKeys[0].isExtended || false;
+        main.classList.toggle('bg-rose-600/50', true);
+    } else {
+        document.getElementById('syllablesInput').value = '';
+        document.getElementById('partsInput').value = '';
+        document.getElementById('extendedInput').checked = false;
+        main.classList.toggle('bg-rose-600/50', false);
+    }
+});
+
+/*
+* set local storage and add new word to list
+*/
 document.getElementById('wordForm').addEventListener('submit', (e) => {
     e.preventDefault();
     
-    const word = document.getElementById('wordInput').value.trim();
+    const user = userInput.value.trim();
+    const word = wordInput.value.trim();
     const s = document.getElementById('syllablesInput').value.trim().split(/\s+/);
     const partsText = document.getElementById('partsInput').value.trim();
     const isExtended = document.getElementById('extendedInput').checked;
+    
+    localStorage.setItem(USER_KEY, user);
 
     const newEntry = {
         word,
         s,
         parts: partsText ? partsText.split(/\s+/) : [word],
         isExtended,
-        v: ["user-defined"], // به صورت پیش‌فرض تایید کاربر
+        v: [user],
         auto: false
     };
 
     const words = getStoredWords();
-    words.unshift(newEntry); // اضافه کردن به ابتدای لیست
+    words.unshift(newEntry);
     saveWords(words);
     
-    e.target.reset(); // پاک کردن فرم
+    e.target.reset();
 });
 
-// حذف کلمه
+/*
+* delete word from list by index
+*/
 window.deleteWord = (index) => {
     if (confirm('آیا از حذف این کلمه مطمئن هستید؟')) {
         const words = getStoredWords();
@@ -88,4 +128,8 @@ window.exportJSON = () => {
     link.click();
 };
 
+/*
+* initial render and load user from local storage
+*/
 renderTable();
+localStorage.getItem(USER_KEY) && (userInput.value = localStorage.getItem(USER_KEY));

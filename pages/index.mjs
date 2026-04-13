@@ -150,6 +150,9 @@ document.querySelector('[share-page]').addEventListener('click', () => {
   navigator.clipboard.writeText(window.location.href);
 });
 
+document.querySelector('[add-line]').addEventListener('click', () => {
+  addLine();
+});
 
 
 const params = new URL(document.location.href).searchParams;

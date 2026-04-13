@@ -9,6 +9,7 @@ function loadWords() {
     const elAccept = document.querySelector('.count-word-accept');
     const elNotAccept = document.querySelector('.count-word-not-accept');
     const elDontNeed = document.querySelector('.count-word-dont-need');
+    const elUserWords = document.querySelector('.count-word-user');
 
     // Access properties from analyzeData, not the root of the class
     const stats = wordStorage.analyzeData;
@@ -18,6 +19,7 @@ function loadWords() {
     if(elAccept != null) { elAccept.innerHTML = stats.accept;}
     if(elNotAccept != null){ elNotAccept.innerHTML = stats.noAccept;}
     if(elDontNeed != null) {elDontNeed.innerHTML = stats.auto;}
+    if(elUserWords != null) {elUserWords.innerHTML = stats.userWords;}
   } else {
     // If not ready yet, wait 1s and try again
     setTimeout(loadWords, 1000);

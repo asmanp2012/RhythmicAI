@@ -110,7 +110,7 @@ window.deleteWord = (index) => {
 };
 
 window.exportJSON = () => {
-    const words = getStoredWords();
+    const words = wordStorage.exportAll(); // Get all merged words from wordStorage
     if (words.length === 0) return alert('لیست خالی است!');
     
     const customLineByLine = words

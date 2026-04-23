@@ -80,7 +80,7 @@ function printWords() {
       const verifiers = item.v ?? [];
       const verifierHtml = getVerifierBadges(verifiers);
 
-      return `<tr class="hover:bg-gray-50 transition">
+      return `<tr class="hover:bg-gray-50 transition" title="${item.d}">
         <td class="px-4 py-3 text-gray-600">${displayIndex}</td>
         <td class="px-4 py-3 font-medium">${item.word}</td>
         <td class="px-4 py-3 font-mono">${syllables}</td>

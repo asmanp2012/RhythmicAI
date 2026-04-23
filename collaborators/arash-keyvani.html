@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>آرش کیوانی | شاعر و ترانه سرا</title>
+  <link rel="stylesheet" href="../assets/css/Vazir-Code.css" />
+  <script src="../assets/js/tailwind-browser@4.js"></script>
+  <style>
+    .poem-card {
+      transition: all 0.3s ease;
+    }
+    .poem-card:hover {
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body 
+  data-collaborate-id="arash-keyvani"
+  class="bg-white text-gray-900 antialiased font-sans"
+>
+
+  <!-- نوار ناوبری -->
+  <nav class="bg-gray-100 border-b border-gray-200 px-4 py-3 flex flex-wrap items-center justify-between sticky top-0 z-50">
+    <a href="../index.html" class="text-xl font-bold text-gray-800 hover:text-gray-600 transition">
+      📚 پروژه متن باز ریتمیک
+    </a>
+
+    <div id="navbarNav" class="hidden lg:flex lg:items-center lg:gap-4 w-full lg:w-auto mt-3 lg:mt-0">
+      <ul class="flex flex-col lg:flex-row lg:space-x-4 rtl:space-x-reverse space-y-2 lg:space-y-0 w-full">
+        <li>
+          <a href="../index.html" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-200 transition">تحلیل شعر</a>
+        </li>
+        <li>
+          <a href="../list-words.html" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-200 transition">لیست کلمات</a>
+        </li>
+        <li>
+          <a href="../about.html" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-200 transition">درباره ما</a>
+        </li>
+        <li>
+          <a href="../my-word-list.html" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-200 transition">کلمات من</a>
+        </li>
+      </ul>
+    </div>
+    <div class="flex items-center">
+      <button
+        navbar-toggler
+        type="button"
+        class="block lg:hidden p-2 rounded-md text-gray-600 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400"
+      >
+        ☰
+      </button>
+      <span class="text-gray-500 text-sm hidden sm:inline">
+        تعداد کلمات: <span id="totalWords" class="font-semibold">۰</span>
+      </span>
+    </div>
+  </nav>
+
+  <!-- هدر پروفایل -->
+  <div class="bg-gradient-to-b from-blue-50 to-white border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="flex flex-col md:flex-row items-center gap-8">
+        <!-- آواتار -->
+        <div class="flex-shrink-0">
+          <div class="w-32 h-32 md:w-40 md:h-40 bg-blue-100 rounded-full overflow-clip flex items-center justify-center border-4 border-white shadow-lg">
+            <img
+              src="./images/arash-keyvani.jpg"
+              class="size-full"
+            />
+          </div>
+        </div>
+        
+        <!-- اطلاعات شاعر -->
+        <div class="flex-1 text-center md:text-right">
+          <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">آرش کیوانی</h1>
+          <p class="text-xl text-gray-600 mb-4">Arash Keyvani</p>
+          
+          <div class="flex flex-wrap gap-3 justify-center md:justify-start mb-4">
+            <span class="inline-flex items-center gap-1 bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">
+              <span>👤</span> شاعر
+            </span>
+            <span class="inline-flex items-center gap-1 bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
+              <span>𝄞</span> ترانه سرا 
+            </span>
+            <span class="inline-flex items-center gap-1 bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm">
+              <span>📝</span> منتقد ادبی
+            </span>
+          </div>
+          <p class="mb-4 text-justify">
+            شاعر، پژوهشگر و فعال ادبی. از مدیران و برگزارکنندگان محافل ادبی «بهمنا» و «کاژه» و از چهره‌های فعال در حوزه شعر و عروض فارسی. او علاوه بر فعالیت در نشست‌های ادبی، در زمینه آموزش وزن و تقطیع شعر فارسی نیز با شاعران جوان همکاری داشته و در برخی فعالیت‌های هنری از جمله تئاتر نیز حضور داشته است.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Words contributed by Arash Keyvani -->
+  <div
+    class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
+  >
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-2xl font-bold text-gray-800">📘 کلمات تکمیل‌شده</h2>
+      <span class="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full" id="word-count">0 کلمه</span>
+    </div>
+    
+    <div id="words-container" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+    </div>
+    
+    <div class="text-center mt-6">
+      <a
+        id="load-more"
+        class="text-blue-600 hover:underline text-sm"
+        href="../list-words.html"
+      >
+        مشاهده همه ←
+      </a>
+    </div>
+  </div>
+
+
+  <!-- فوتر -->
+  <footer class="bg-gray-100 border-t border-gray-200 mt-12 py-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-500 text-sm">
+      <p>پروژه متن‌باز ریتمیک | پروفایل مشارکت‌کنندگان</p>
+      <p class="mt-1">همه‌ی اشعار و محتوا با مجوز آزاد منتشر می‌شوند</p>
+    </div>
+  </footer>
+
+  <script src="../pages/collaborators.mjs" type="module"></script>
+  
+</body>
+</html>

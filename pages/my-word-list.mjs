@@ -7,6 +7,11 @@ const main = document.getElementById('mainContent');
 const userInput = document.getElementById('username');
 const wordInput = document.getElementById('wordInput');
 
+const rulesName = {
+    eshba: "اشباء",
+    takhfif: "تخفیف یا اتصال"
+};
+
 /*
 * local storage functions
 */
@@ -31,7 +36,9 @@ function renderTable() {
         return;
     }
 
-    tableBody.innerHTML = words.map((item, index) => `
+    tableBody.innerHTML = words.map((item, index) => {
+        const listRule = item.rules ? Object.keys(item.rules) : [];
+        return`
         <tr class="border-b hover:bg-gray-50">
             <td class="px-4 py-3 font-bold">${item.word}</td>
             <td class="px-4 py-3 text-sm font-mono">${item.s.join(' · ')}</td>
@@ -39,12 +46,18 @@ function renderTable() {
             <td class="px-4 py-3">
                 ${item.isExtended ? '<span class="text-purple-600 text-xs font-bold">کشیده</span>' : '<span class="text-gray-400 text-xs">معمولی</span>'}
             </td>
+            <td>
+                ${listRule.map((value, index) => { return rulesName[index] ?? value }).join(', ')}
+            </td>
             <td class="px-4 py-3">
                 <button onclick="deleteWord(${index})" class="text-red-500 hover:text-red-700 text-sm">حذف</button>
             </td>
         </tr>
-    `).join('');
+    `}).join('');
 }
+
+
+
 
 /*
 * auto-fill syllables and parts when a known word is typed, and highlight the form if it's a match

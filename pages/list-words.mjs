@@ -4,6 +4,11 @@ import { baseWord, BASE_WORD_SHAPES, wordStorage, getSyllableShape } from '../as
 let currentPage1 = 1;
 const itemsPerPage = 50;
 
+const rulesName = {
+    eshba: "اشباء",
+    takhfif: "تخفیف یا اتصال"
+};
+
 function getVerifierBadges(verifiers) {
   const verifierCount = verifiers.length;
 
@@ -79,12 +84,17 @@ function printWords() {
 
       const verifiers = item.v ?? [];
       const verifierHtml = getVerifierBadges(verifiers);
-
+      const listRule = item.rules ? Object.keys(item.rules) : [];
       return `<tr class="hover:bg-gray-50 transition" title="${item.d}">
         <td class="px-4 py-3 text-gray-600">${displayIndex}</td>
         <td class="px-4 py-3 font-medium">${item.word}</td>
         <td class="px-4 py-3 font-mono">${syllables}</td>
-        <td class="px-4 py-3">${statusIcon}</td>
+        <td class="px-4 py-3">
+          ${statusIcon}
+        </td>
+        <td class="px-4 py-3">
+          ${listRule.map((value) => { return rulesName[value] ?? value }).join(', ')}
+        </td>
         <td class="px-4 py-3">${verifierHtml}</td>
         <td
           class="px-4 py-3"
